@@ -130,12 +130,12 @@ def access_history():
     # Cria uma nova janela para mostrar o histórico
     history_window = Toplevel(root)
     history_window.title("Histórico de dados climáticos")
-    history_window.geometry("1400x800")  # Aumentar o tamanho da janela
+    history_window.geometry("400x600")  # Aumentar o tamanho da janela
 
     # Exibe o histórico na nova janela
     for entry in historical_data:
         entry_text = f"Dia e hora: {entry['Dia e hora:']}\n"
-        entry_text += f"Localização: {entry['Localização:']}\n"
+        entry_text += f"Localização: {entry['Localização:']}\n" #output = entry e não os dados do site
         entry_text += f"Temperatura: {entry['Temperatura']:.1f}ºC\n"
         entry_text += f"Humidade: {entry['Humidade']}%\n"
         entry_text += f"Velocidade do vento: {entry['Velocidade do vento']:.1f} m/s\n"
