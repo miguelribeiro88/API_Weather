@@ -1,2 +1,2 @@
 # API_Weather
- Laboratório 1ºAno 2º Semestre
+Trabalho de Laboratório 1ºAno 2º Semestre
