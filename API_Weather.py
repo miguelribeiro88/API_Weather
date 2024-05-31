@@ -136,10 +136,10 @@ def access_history():
     for entry in historical_data:
         entry_text = f"Dia e hora: {entry['Dia e hora:']}\n"
         entry_text += f"Localização: {entry['Localização:']}\n"
-        entry_text += f"Temperatura: {entry['Temperatura']}\n"
-        entry_text += f"Humidade: {entry['Humidade']}\n"
-        entry_text += f"Velocidade do vento: {entry['Velocidade do vento']}\n"
-        entry_text += f"Pressão: {entry['Pressão']}\n"
+        entry_text += f"Temperatura: {entry['Temperatura']:.1f}ºC\n"
+        entry_text += f"Humidade: {entry['Humidade']}%\n"
+        entry_text += f"Velocidade do vento: {entry['Velocidade do vento']:.1f} m/s\n"
+        entry_text += f"Pressão: {entry['Pressão']:.1f} hPa\n"
         entry_label = tk.Label(history_window, text=entry_text, font=("Helvetica", 12))
         entry_label.pack(pady=5)
 
