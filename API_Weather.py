@@ -134,11 +134,9 @@ def access_history():
 
     # Exibe o histórico na nova janela
     for entry in historical_data:
-        '''
-        entry_text = f"Dia e hora: {entry['Dia e hora:']}\n"
-        '''
+        
         entry_text = f"Dia e hora: {entry['Dia e hora:'].strftime('%d/%m/%Y - %H:%M:%S')}\n"
-        entry_text += f"Localização: {entry['Localização:']}\n" #output = entry e não os dados do site
+        entry_text += f"Localização: {entry['Localização:']}\n" #TODO = entry e não os dados do site
         entry_text += f"Temperatura: {entry['Temperatura']:.1f}ºC\n"
         entry_text += f"Humidade: {entry['Humidade']}%\n"
         entry_text += f"Velocidade do vento: {entry['Velocidade do vento']:.1f} m/s\n"
