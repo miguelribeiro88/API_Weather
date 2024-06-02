@@ -108,7 +108,7 @@ def create_history(temperature, humidity, wind_speed, pressure):
 
     # Cria um dicionário com os dados atuais e um timestamp
     data_entry = {
-        'Dia e hora:': datetime.datetime.now(),
+        'Dia e hora:': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'Localização:': city_entry.get(),
         'Temperatura': temperature,
         'Humidade': humidity,
@@ -135,7 +135,7 @@ def access_history():
     # Exibe o histórico na nova janela
     for entry in historical_data:
         
-        entry_text = f"Dia e hora: {entry['Dia e hora:'].strftime('%d/%m/%Y - %H:%M:%S')}\n"
+        entry_text = f"Dia e hora: {entry['Dia e hora:']}\n"
         entry_text += f"Localização: {entry['Localização:']}\n" #TODO = entry e não os dados do site
         entry_text += f"Temperatura: {entry['Temperatura']:.1f}ºC\n"
         entry_text += f"Humidade: {entry['Humidade']}%\n"
@@ -143,7 +143,7 @@ def access_history():
         entry_text += f"Pressão: {entry['Pressão']:.1f} hPa\n"
         entry_label = tk.Label(history_window, text=entry_text, font=("Helvetica", 12))
         entry_label.pack(pady=5)
-
+     
     # Adiciona um botão para voltar atrás
     close_button = tk.Button(history_window, text="Fechar", command=history_window.destroy)
     close_button.pack(pady=5)
