@@ -4,6 +4,11 @@ from tkinter import messagebox, Toplevel
 from PIL import Image, ImageTk
 import ttkbootstrap as ttk
 import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import re
+
 
 # Variáveis globais para armazenar dados climáticos anteriores
 previous_temperature = None
@@ -14,6 +19,32 @@ previous_pressure = None
 # Variável global para criar lista vazia de histórico
 historical_data = []
 
+def send_email(subject, body, to_email):
+    # Email configuration
+    from_email = "weatherapilabutad@gmail.com"
+    password = "weatherapilabutad0!"
+
+    # Create the email message
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        # Set up the server
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(from_email, password)
+        
+        # Send the email
+        server.sendmail(from_email, to_email, msg.as_string())
+        server.close()
+        
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
 
 # Função para obter informações sobre o clima da API
 def get_weather(city):
@@ -62,7 +93,7 @@ def analyze_weather_data(temperature, humidity, wind_speed, pressure):
             anomalies.append("Mudança abrupta na humidade detetada!")
 
     # Verificar condições propícias para desastres naturais
-    if humidity > 70 and pressure < 1000:
+    if humidity > 70 and pressure < 1050:
         anomalies.append("Alerta: Condições propícias para inundações!")
     if temperature < 0:
         anomalies.append("Alerta: Condições propícias para neve!")
@@ -87,21 +118,53 @@ def show_anomalies():
     anomalies_window.title("Anomalias Detetadas")
     anomalies_window.geometry("350x200")  # Aumentar o tamanho da janela
 
+    email_body = "Anomalias Detetadas:\n\n"
+
     # Exibe as anomalias na nova janela
     for anomaly in anomalies:
         anomaly_label = tk.Label(anomalies_window, text=anomaly, font=("Helvetica", 12))
         anomaly_label.pack(pady=5)
-    
+        email_body += f"{anomaly}\n"
 
         # Verificar se é um alerta para desastre natural e exibir uma caixa de diálogo
         if "Alerta" in anomaly:
             messagebox.showwarning("Alerta de Desastre Natural", anomaly)
 
 
-    # Adiciona um botã para voltar atrás
+    # Adiciona um botão para voltar atrás
     close_button = tk.Button(anomalies_window, text="Fechar", command=anomalies_window.destroy)
     close_button.pack(pady=5)
 
+    if anomalies is not None:
+        
+        notification_window = Toplevel(root)
+        notification_window.title("Enviar Notificação")
+        notification_window.geometry("300x200")
+
+        email_label = tk.Label(notification_window, text="Escreva o endereço de email:", font=("Helvetica", 12))
+        email_label.pack(pady=10)
+
+        email_entry = tk.Entry(notification_window, font=("Helvetica", 12))
+        email_entry.pack(pady=10)
+
+        send_button = tk.Button(notification_window, text="Enviar", command=lambda: send_notification_email(email_entry.get(), email_body, notification_window))
+        send_button.pack(pady=10)
+
+        close_button = tk.Button(notification_window, text="Fechar", command=notification_window.destroy)
+        close_button.pack(pady=10)
+
+        def send_notification_email(to_email, email_body, notification_window):
+            if not to_email:
+                messagebox.showerror("Erro", "Por favor, escreva um endereço de email válido.")
+            return 
+
+def is_valid_email(email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, email) is not None
+
+    send_email("Anomalias Detetadas", email_body, to_email)
+    notification_window.destroy()
+    messagebox.showinfo("Sucesso", "Email enviado com sucesso!")
 
 # Função para criar histórico de dados climáticos
 def create_history(temperature, humidity, wind_speed, pressure, city, country):
@@ -210,7 +273,6 @@ pressure_label.pack()
 # Botão para mostrar anomalias
 anomalies_button = ttk.Button(root, text="Padrões Anormais", command=show_anomalies, bootstyle="Info")
 anomalies_button.pack(pady=20)
-
 
 # Botão para mostrar histórico
 history_button = ttk.Button(root, text="Histórico de Dados Climáticos", command=access_history, bootstyle="Success")
