@@ -17,6 +17,7 @@ historical_data = []
 
 # Função para obter informações sobre o clima da API
 def get_weather(city):
+
     API_key = "6ed0c3d1a7f543cd53d44d19794ffd08"
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_key}"
     res = requests.get(url)
@@ -103,13 +104,13 @@ def show_anomalies():
 
 
 # Função para criar histórico de dados climáticos
-def create_history(temperature, humidity, wind_speed, pressure):
+def create_history(temperature, humidity, wind_speed, pressure, city, country):
     global previous_temperature, previous_humidity, previous_wind_speed, previous_pressure
 
     # Cria um dicionário com os dados atuais e um timestamp
     data_entry = {
         'Dia e hora:': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'Localização:': city_entry.get(),
+        'Localização:': f"{city}, {country}",
         'Temperatura': temperature,
         'Humidade': humidity,
         'Velocidade do vento': wind_speed,
@@ -136,7 +137,7 @@ def access_history():
     for entry in historical_data:
         
         entry_text = f"Dia e hora: {entry['Dia e hora:']}\n"
-        entry_text += f"Localização: {entry['Localização:']}\n" #TODO = entry e não os dados do site
+        entry_text += f"Localização: {entry['Localização:']}\n"  
         entry_text += f"Temperatura: {entry['Temperatura']:.1f}ºC\n"
         entry_text += f"Humidade: {entry['Humidade']}%\n"
         entry_text += f"Velocidade do vento: {entry['Velocidade do vento']:.1f} m/s\n"
@@ -173,7 +174,7 @@ def search():
     anomalies = analyze_weather_data(temperature, humidity, wind_speed, pressure)
 
     # Atualizar o histórico de dados climáticos
-    create_history(temperature, humidity, wind_speed, pressure)
+    create_history(temperature, humidity, wind_speed, pressure, city, country)
 
 
 # Configuração da janela principal
